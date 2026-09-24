@@ -1,4 +1,4 @@
-PC Lua 모의환경 94 개 검사 통과. 음성 API 호출 검사 포함. 실제 조종기 소리 청취/실행 검증 미실시.
+PC Lua 모의환경 104 개 검사 통과. 실제 조종기 실행 검증 미실시.
 PASS positive collective supports upright flight
 PASS negative collective supports inverted flight
 PASS positive collective accelerates inverted heli downward
@@ -93,4 +93,14 @@ PASS SOUND OFF suppresses playback
 PASS pause stops new rotor tones
 PASS menu stays silent
 PASS settings ENTER toggles SOUND
+PASS crash reset defaults OFF
+PASS ON mode does not reset while sitting on launch pad
+PASS actual takeoff arms crash reset
+PASS ON ground contact resets to launch and start menu
+PASS automatic reset preserves ON and clears airborne latch
+PASS ON inverted impact resets
+PASS OFF hard impact remains continuous
+PASS settings row toggles crash reset ON
+PASS settings toggles crash reset OFF
+PASS ninth settings row returns to menu
 

@@ -1,4 +1,4 @@
--- HELI 3D 0.4.3 | EdgeTX 2.12.2 / TX16S MK3 / Mode 1
+-- HELI 3D 0.4.4 | EdgeTX 2.12.2 / TX16S MK3 / Mode 1
 -- Original low-poly graphics, inspired by the selected helicopter.
 -- Simplified fixed-headspeed collective-pitch model, not a flight predictor.
 -- No RF/model writes. Run on a dedicated model with both RF modules OFF.
@@ -20,6 +20,7 @@ local speedIndex,speedLatch=1,false
 local controlMode,radioMode,settingsRow=1,1,1
 local radioDetected=false
 local soundEnabled,lastTone=true,-100
+local crashReset=false
 local selected, mode, latch = 1, "menu", false
 local s, u, R, C = {}, {a=0,e=0,r=0,c=0}, {}, {}
 local lastTime, rotor, hint = 0, 0, ""
@@ -41,7 +42,7 @@ local function matrix()
 end
 local function reset()
   s={x=0,y=0,z=0,vx=0,vy=0,vz=0,qw=1,qx=0,qy=0,qz=0,
-     wx=0,wy=0,wz=0,time=0}
+     wx=0,wy=0,wz=0,time=0,airborne=false}
   mode,hint="menu",""
   matrix()
 end
@@ -88,10 +89,16 @@ local function physics(dt)
   s.x,s.y,s.z=s.x+s.vx*dt,s.y+s.vy*dt,s.z+s.vz*dt
   s.time=s.time+dt
 
-  -- Soft practice floor: preserve attitude/control and never require a reset.
+  -- Optional crash reset arms only after leaving the ground.
   local clearance=0.9*sqrt(math.max(0,1-R[9]*R[9]))
                   +0.35*math.max(0,-R[9])
+  if s.z>clearance+.025 then s.airborne=true end
   if s.z<=clearance then
+    if crashReset and s.airborne then
+      reset()
+      hint="GROUND RESET - CENTER STICKS + ENTER"
+      return
+    end
     s.z=clearance
     s.vz=math.max(0,s.vz)
     s.vx,s.vy=s.vx/(1+14*dt),s.vy/(1+14*dt)
@@ -310,7 +317,7 @@ local function ui()
   local m=models[selected]
   box(0,0,800,65,C.panel)
   text(18,8,m.name,m.color)
-  text(18,35,"HELI 3D v0.4.3  /  MODE "..controlMode.."  /  RATE CONTROL",C.muted)
+  text(18,35,"HELI 3D v0.4.4  /  MODE "..controlMode.."  /  RATE CONTROL",C.muted)
   text(564,8,string.format("ALT %.1fm",s.z))
   text(564,35,string.format("COL %+d%%",round(u.c*100)))
   box(0,399,800,81,C.panel)
@@ -363,14 +370,15 @@ local function settingsUI()
   text(26,44,"Wheel: select row   ENTER: change   EXIT: back",C.muted)
   local keys={"revAil","revEle","revRud","revCol"}
   local labels={"AILERON","ELEVATOR","RUDDER","COLLECTIVE"}
-  for i=1,8 do
-    local y=78+(i-1)*36
-    if i==settingsRow then box(20,y-4,760,36,C.active) end
+  for i=1,9 do
+    local y=78+(i-1)*32
+    if i==settingsRow then box(20,y-4,760,30,C.active) end
     local label,value
     if i==1 then label,value="SIMULATOR MODE","MODE "..controlMode
     elseif i==2 then label,value="RADIO ACTUAL MODE","MODE "..radioMode..(radioDetected and " (AUTO)" or " (SET TO MATCH RADIO)")
     elseif i<=6 then label,value=labels[i-2],CFG[keys[i-2]]==1 and "NORMAL" or "REVERSE"
     elseif i==7 then label,value="SOUND",soundEnabled and "ON" or "OFF"
+    elseif i==8 then label,value="CRASH RESET",crashReset and "ON" or "OFF"
     else label,value="BACK","Return to aircraft selection" end
     text(35,y,label);text(325,y,value,C.yellow)
   end
@@ -417,8 +425,8 @@ local function run(event)
   local dt=clamp(elapsed,0,0.1)
   if suppressBreak and now-suppressAt>120 then suppressBreak=false end
   if mode=="settings" then
-    if eventIs(event,EVT_ROT_LEFT) or eventIs(event,EVT_MINUS_FIRST) then settingsRow=(settingsRow+6)%8+1 end
-    if eventIs(event,EVT_ROT_RIGHT) or eventIs(event,EVT_PLUS_FIRST) then settingsRow=settingsRow%8+1 end
+    if eventIs(event,EVT_ROT_LEFT) or eventIs(event,EVT_MINUS_FIRST) then settingsRow=(settingsRow+7)%9+1 end
+    if eventIs(event,EVT_ROT_RIGHT) or eventIs(event,EVT_PLUS_FIRST) then settingsRow=settingsRow%9+1 end
     if eventIs(event,EVT_EXIT_BREAK) then mode="menu"
     elseif eventIs(event,EVT_ENTER_BREAK) then
       if suppressBreak then suppressBreak=false
@@ -428,6 +436,7 @@ local function run(event)
         local key=({"revAil","revEle","revRud","revCol"})[settingsRow-2]
         CFG[key]=-CFG[key]
       elseif settingsRow==7 then soundEnabled=not soundEnabled
+      elseif settingsRow==8 then crashReset=not crashReset
       else mode="menu" end
     end
     lcd.clear();settingsUI();text(716,461,"by PSP",C.muted);return 0
