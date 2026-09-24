@@ -1,0 +1,96 @@
+PC Lua 모의환경 94 개 검사 통과. 음성 API 호출 검사 포함. 실제 조종기 소리 청취/실행 검증 미실시.
+PASS positive collective supports upright flight
+PASS negative collective supports inverted flight
+PASS positive collective accelerates inverted heli downward
+PASS zero collective does not hover
+PASS 180-degree roll reaches inverted attitude
+PASS centered cyclic holds attitude without auto-level
+PASS 180-degree elevator flip reaches inverted attitude
+PASS 360-degree roll returns upright without angle clamp
+PASS 360-degree flip returns upright without gimbal lock
+PASS combined rotations preserve normalized orientation
+PASS inverted negative-pitch right cyclic accelerates opposite upright
+PASS upright right cyclic tilts thrust axis right
+PASS forward elevator tilts thrust toward nose
+PASS right rudder turns nose right
+PASS positive collective takes off from pad
+PASS hard landing continues without reset
+PASS inverted floor contact keeps flight active
+PASS gentle upright contact permits landing
+PASS crossing old boundary continues without reset
+PASS start rejects non-neutral collective
+PASS start rejects non-neutral cyclic
+PASS rudder selects Specter
+PASS rudder selects Goblin
+PASS neutral controls start flight
+PASS full run loop reads collective and takes off
+PASS resume rejects changed collective
+PASS matched collective resumes
+PASS long update gap continues flight without auto-pause
+PASS slow frame 26 ticks never pauses flight
+PASS slow frame 50 ticks never pauses flight
+PASS slow frame 100 ticks never pauses flight
+PASS slow frame 500 ticks never pauses flight
+PASS long ENTER release cannot start accidentally
+PASS EXIT from menu closes script
+PASS climbing through 65m continues without reset
+PASS no false ground contact at altitude 2 attitude 0
+PASS no false ground contact at altitude 2 attitude 1.5707963267949
+PASS no false ground contact at altitude 2 attitude 3.1415926535898
+PASS no false ground contact at altitude 2 attitude 4.7123889803847
+PASS no false ground contact at altitude 10 attitude 0
+PASS no false ground contact at altitude 10 attitude 1.5707963267949
+PASS no false ground contact at altitude 10 attitude 3.1415926535898
+PASS no false ground contact at altitude 10 attitude 4.7123889803847
+PASS no false ground contact at altitude 65 attitude 0
+PASS no false ground contact at altitude 65 attitude 1.5707963267949
+PASS no false ground contact at altitude 65 attitude 3.1415926535898
+PASS no false ground contact at altitude 65 attitude 4.7123889803847
+PASS no false ground contact at altitude 150 attitude 0
+PASS no false ground contact at altitude 150 attitude 1.5707963267949
+PASS no false ground contact at altitude 150 attitude 3.1415926535898
+PASS no false ground contact at altitude 150 attitude 4.7123889803847
+PASS no false ground contact at altitude 1000 attitude 0
+PASS no false ground contact at altitude 1000 attitude 1.5707963267949
+PASS no false ground contact at altitude 1000 attitude 3.1415926535898
+PASS no false ground contact at altitude 1000 attitude 4.7123889803847
+PASS repeated ground contact never requires reset
+PASS take off again after hard landing without reset
+PASS inverted contact preserves attitude and negative-pitch takeoff
+PASS rates and thrust increased exactly 20 percent from v0.3.2
+PASS unrestricted horizontal position 100,0
+PASS unrestricted horizontal position -100,0
+PASS unrestricted horizontal position 0,100
+PASS unrestricted horizontal position 0,-100
+PASS unrestricted horizontal position 10000,-10000
+PASS ground pilot stays fixed while tracking distant flight
+PASS speed preset 1 applies expected thrust and angular rate
+PASS speed preset 2 applies expected thrust and angular rate
+PASS speed preset 3 applies expected thrust and angular rate
+PASS speed preset 4 applies expected thrust and angular rate
+PASS right stick selects slower preset
+PASS held stick does not repeat speed selection
+PASS neutral then right selects next faster preset
+PASS manual reset preserves speed selection
+PASS camera co-location stays finite
+PASS direct overhead view keeps an orthonormal camera
+PASS helicopter shrinks naturally with distance
+PASS radio mode 1 maps simulator mode 1 correctly
+PASS radio mode 1 maps simulator mode 2 correctly
+PASS radio mode 2 maps simulator mode 1 correctly
+PASS radio mode 2 maps simulator mode 2 correctly
+PASS revAil reverses simulator input
+PASS revEle reverses simulator input
+PASS revRud reverses simulator input
+PASS revCol reverses simulator input
+PASS hold ENTER opens mode and reverse settings
+PASS settings ENTER switches to Mode 2
+PASS EXIT returns from settings without closing simulator
+PASS rotor sound uses background audio
+PASS audio rate limit avoids queued tones
+PASS collective changes synthetic rotor tone
+PASS SOUND OFF suppresses playback
+PASS pause stops new rotor tones
+PASS menu stays silent
+PASS settings ENTER toggles SOUND
+
